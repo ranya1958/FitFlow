@@ -8,7 +8,6 @@ client = Blueprint('client', __name__)
 
 
 # Route 1: GET all completed workout logs for client
-# Example: /client/client_workout_log?client_id=1
 @client.route("/client_workout_log", methods=["GET"])
 def get_client_workout_logs():
     """Return all completed workout logs for the authenticated client (last 10)"""
@@ -51,7 +50,6 @@ def get_client_workout_logs():
 
 
 # Route 2: POST - Create a new workout log
-# Example: POST /client/client_workout_log with JSON body
 @client.route("/client_workout_log", methods=["POST"])
 def create_workout_log():
     """Create a new workout log entry with date, duration, completion_status, and notes"""
@@ -94,7 +92,6 @@ def create_workout_log():
 
 
 # Route 3: PUT - Update a workout log's duration or notes
-# Example: PUT /client/client_workout_log/5 with JSON body
 @client.route("/client_workout_log/<int:log_id>", methods=["PUT"])
 def update_workout_log(log_id):
     """Update a workout log's duration or notes"""
@@ -144,7 +141,6 @@ def update_workout_log(log_id):
 
 
 # Route 4: DELETE - Delete incomplete workout logs
-# Example: DELETE /client/client_workout_log?client_id=1
 @client.route("/client_workout_log", methods=["DELETE"])
 def delete_incomplete_logs():
     """Delete incomplete workout logs where completion_status = 'not_started'"""
@@ -180,7 +176,6 @@ def delete_incomplete_logs():
 
 
 # Route 5: GET - Monthly completion rate comparison
-# Example: /client/client_workout_log/completion_rate/monthly?client_id=1
 @client.route("/client_workout_log/completion_rate/monthly", methods=["GET"])
 def get_monthly_completion_rate():
     """Return workout completion count: current month vs previous month"""
