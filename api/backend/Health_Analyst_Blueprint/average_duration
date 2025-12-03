@@ -13,8 +13,6 @@ def get_average_workout_duration():
         year = request.args.get("year")
         week = request.args.get("week")
 
-        current_app.logger.debug(f'Query parameters - country: {country}, focus_area: {focus_area}, founding_year: {founding_year}')
-
         # Prepare the Base query
         query = """
             SELECT
@@ -38,7 +36,7 @@ def get_average_workout_duration():
             ORDER BY c.client_id, year, week;
         """
     
-        current_app.logger.debug(f'Executing query: {query} with params: {params}')
+        current_app.logger.debug(f'Executing query: {query}')
         cursor.execute(query, params)
         duration = cursor.fetchall()
         cursor.close()
