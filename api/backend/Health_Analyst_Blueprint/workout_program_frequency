@@ -4,8 +4,8 @@ from mysql.connector import Error
 from flask import current_app
 
 
-analytics = Blueprint('analytics', __name__)
-@analytics.route("/workout_session_template/used", methods=["GET"])
+frequency = Blueprint('frequency', __name__)
+@frequency.route("/workout_session_template/used", methods=["GET"])
 def get_program_frequency():
     try:
         query = """
@@ -21,11 +21,11 @@ def get_program_frequency():
 
         current_app.logger.debug(f'Executing query: {query}')
         cursor.execute(query)
-        frequency = cursor.fetchall()
+        count = cursor.fetchall()
         cursor.close()
 
         current_app.logger.info(f'Successfully retried workout program frequency')
-        return jsonify(frequency), 200
+        return jsonify(count), 200
     except Error as e:
         current_app.logger.error(f'Database error in get_program_frequecy: {str(e)}')
         return jsonify({"error": str(e)}), 500
