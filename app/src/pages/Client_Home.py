@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_extras.app_logo import add_logo
+from streamlit_assests.app_logo import add_logo
 import requests
 
 st.set_page_config(
