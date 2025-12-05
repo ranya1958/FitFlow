@@ -6,7 +6,6 @@ from flask import current_app
 # Create a Blueprint for NGO routes
 ngos = Blueprint("ngos", __name__)
 
-
 # Get all NGOs with optional filtering by country, focus area, and founding year
 # Example: /ngo/ngos?country=United%20States&focus_area=Environmental%20Conservation
 @ngos.route("/ngos", methods=["GET"])
