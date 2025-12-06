@@ -100,7 +100,7 @@ with col1:
         """
     )
     if st.button("Go to Dashboard →", use_container_width=True):
-        st.switch_page("pages/31_Chester_Dashboard.py")
+        st.switch_page("pages/Client_Dashboard.py")
 
 with col2:
     st.markdown(
@@ -110,7 +110,7 @@ with col2:
         """
     )
     if st.button("Log Workout →", use_container_width=True):
-        st.switch_page("pages/32_Chester_Log_Workout.py")
+        st.switch_page("pages/Client_Log_Workout.py")
 
 with col3:
     st.markdown(
@@ -120,7 +120,7 @@ with col3:
         """
     )
     if st.button("View Program →", use_container_width=True):
-        st.switch_page("pages/33_Chester_My_Program.py")
+        st.switch_page("pages/Client_My_Program.py")
 
 st.markdown("---")
 

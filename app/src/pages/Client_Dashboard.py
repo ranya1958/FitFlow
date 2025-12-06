@@ -185,12 +185,12 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.button("← Back to Home", use_container_width=True):
-        st.switch_page("pages/30_Chester_Home.py")
+        st.switch_page("pages/Client_Home.py")
 
 with col2:
     if st.button("📝 Log a Workout", use_container_width=True):
-        st.switch_page("pages/32_Chester_Log_Workout.py")
+        st.switch_page("Client_Log_Workout.py")
 
 with col3:
     if st.button("🎯 View My Program", use_container_width=True):
-        st.switch_page("pages/33_Chester_My_Program.py")
+        st.switch_page("pages/Client_My_Program.py")
