@@ -186,7 +186,7 @@ CREATE TABLE Workout_Specific_Exercise(
      ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_wse_exercise
      FOREIGN KEY (exercise_id) REFERENCES Exercise(exercise_id)
-     ON DELETE RESTRICT ON UPDATE CASCADE
+     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 
@@ -311,7 +311,7 @@ INSERT INTO Client (client_id, user_id, first_name, last_name, date_of_birth, ag
   (6, 15, 'Client6', 'User', '1991-07-15', 34, 'Advanced', 'Improve endurance', '2025-07-01'),
   (7, 16, 'Client7', 'User', '1992-08-15', 33, 'Intermediate', 'Rehab', '2025-08-01'),
   (8, 17, 'Client8', 'User', '1993-09-15', 32, 'Beginner', 'Improve endurance', '2025-09-01'),
-  (9, 18, 'Client9', 'User', '1994-01-15', 31, 'Intermediate', 'Improve endurance', '2025-01-01'),
+  (9, 18, 'CLient9', 'User', '1994-01-15', 31, 'Intermediate', 'Improve endurance', '2025-01-01'),
   (10, 19, 'Client10', 'User', '1995-02-15', 30, 'Advanced', 'Build muscle', '2025-02-01'),
   (11, 20, 'Client11', 'User', '1996-03-15', 29, 'Advanced', 'General fitness', '2025-03-01'),
   (12, 21, 'Client12', 'User', '1997-04-15', 28, 'Intermediate', 'Rehab', '2025-04-01'),

@@ -9,7 +9,7 @@ system_admin = Blueprint("system_admin", __name__)
 @system_admin.route("/system_logs", methods=["GET"])
 def get_system_logs():
     try:
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
         cursor.execute("SELECT * FROM System_Log ORDER BY timestamp DESC")
         logs = cursor.fetchall()
         cursor.close()
@@ -22,7 +22,7 @@ def get_system_logs():
 @system_admin.route("/system_logs/<string:action_type>", methods=["GET"])
 def get_logs_by_action(action_type):
     try:
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
 
         query = """
             SELECT * FROM System_Log
@@ -74,7 +74,7 @@ def create_user():
 @system_admin.route("/user/<int:user_id>", methods=["GET"])
 def get_user(user_id):
     try:
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
         cursor.execute("SELECT * FROM User WHERE user_id = %s", (user_id,))
         user = cursor.fetchone()
         cursor.close()
@@ -199,17 +199,32 @@ def create_client_profile():
     except Error as e:
         return jsonify({"error": str(e)}), 500
 
-# DELETE /exercise/{exercise_id}   [Ava-3]
 @system_admin.route("/exercise/<int:exercise_id>", methods=["DELETE"])
 def delete_exercise(exercise_id):
     try:
-        cursor = db.get_db().cursor()
+        conn = db.get_db()
+        cursor = conn.cursor()
+
+        # Check if exercise exists first
+        cursor.execute("SELECT * FROM Exercise WHERE exercise_id = %s", (exercise_id,))
+        existing = cursor.fetchone()
+
+        if not existing:
+            cursor.close()
+            return jsonify({"error": "Exercise not found"}), 404
+
+        # Perform deletion
         cursor.execute("DELETE FROM Exercise WHERE exercise_id = %s", (exercise_id,))
-        db.get_db().commit()
+        conn.commit()
         cursor.close()
         return jsonify({"message": "Exercise deleted"}), 200
+
     except Error as e:
         return jsonify({"error": str(e)}), 500
+
+    except Exception as e:
+        # Catches ANY non-database error so Flask never returns HTML
+        return jsonify({"error": f"Unhandled error: {str(e)}"}), 500
 
 # PUT /exercise/{exercise_id}   [Ava-5]
 @system_admin.route("/exercise/<int:exercise_id>", methods=["PUT"])
@@ -246,7 +261,7 @@ def update_exercise(exercise_id):
 @system_admin.route("/backup_logs", methods=["GET"])
 def get_backup_logs():
     try:
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
         cursor.execute("SELECT * FROM Backup_Log ORDER BY backup_end DESC")
         backups = cursor.fetchall()
         cursor.close()
@@ -258,7 +273,7 @@ def get_backup_logs():
 @system_admin.route("/backup_logs/status", methods=["GET"])
 def get_backup_status():
     try:
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
 
         query = """
             SELECT 
@@ -274,6 +289,7 @@ def get_backup_status():
         row = cursor.fetchone()
         cursor.close()
 
+        # No backups found
         if not row:
             return jsonify({
                 "message": "No successful backups found.",
@@ -287,7 +303,17 @@ def get_backup_status():
             msg = "Backups are current."
         elif days == 7:
             status = "due"
-            msg
+            msg = "Backup is due today."
+        else:
+            status = "overdue"
+            msg = f"Backups are overdue by {days - 7} days."
+
+        return jsonify({
+            "status": status,
+            "days_since_backup": days,
+            "message": msg
+        }), 200
+
     except Error as e:
         return jsonify({"error": str(e)}), 500
 
@@ -295,7 +321,7 @@ def get_backup_status():
 @system_admin.route("/user/permissions", methods=["GET"])
 def get_all_role_permissions():
     try:
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
 
         query = """
             SELECT user_id, role, permissions

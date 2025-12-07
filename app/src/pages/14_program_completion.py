@@ -9,7 +9,7 @@ SideBarLinks()
 
 st.title("Workout Program Completion Rates")
 
-resp = requests.get("http://localhost:4000/health_analyst/completion_rate")
+resp = requests.get("http://web-api:4000/health_analyst/completion_rate")
 
 if resp.status_code == 200:
     st.dataframe(resp.json())

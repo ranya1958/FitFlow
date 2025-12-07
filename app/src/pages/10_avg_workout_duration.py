@@ -21,7 +21,7 @@ if submitted:
     if week:
         params["week"] = week
 
-    resp = requests.get("http://localhost:4000/health_analyst/avg_duration", params=params)
+    resp = requests.get("http://web-api:4000/health_analyst/avg_duration", params=params)
 
     if resp.status_code == 200:
         st.dataframe(resp.json())

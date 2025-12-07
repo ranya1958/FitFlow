@@ -9,7 +9,7 @@ SideBarLinks()
 
 st.title("Workout Template Usage Frequency")
 
-resp = requests.get("http://localhost:4000/health_analyst/frequency")
+resp = requests.get("http://web-api:4000/health_analyst/frequency")
 
 if resp.status_code == 200:
     st.dataframe(resp.json())

@@ -66,7 +66,7 @@ with col2:
     # Fetch quick stats from API
     try:
         response = requests.get(
-            f"http://localhost:4000/client/client_workout_log",
+            f"http://web-api:4000/client/client_workout_log",
             params={"client_id": st.session_state.client_id}
         )
         

@@ -6,14 +6,7 @@ import streamlit as st
 import os
 import streamlit as st
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))       # app/src/modules
-SRC_DIR = os.path.dirname(CURRENT_DIR)                         # app/src
-ASSETS_DIR = os.path.join(SRC_DIR, "assets")                   # app/src/assets
-LOGO_PATH = os.path.join(ASSETS_DIR, "fitflowlogo.png")
-
-print("Loading logo from:", LOGO_PATH)
-
-st.sidebar.image(LOGO_PATH, width=150)
+st.sidebar.image("assets/fitflowlogo.png", width=150)
 
 ############################
 #      GENERAL NAV
@@ -125,7 +118,7 @@ def ClientMyProgramNav():
 ############################################
 def SideBarLinks(show_home=False):
     # Add Logo
-    st.sidebar.image("app/src/assets/fitflowlogo.png", width=150)
+    st.sidebar.image("assets/fitflowlogo.png", width=150)
 
     # Ensure authentication state exists
     if "authenticated" not in st.session_state:

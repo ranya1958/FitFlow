@@ -9,7 +9,7 @@ SideBarLinks()
 
 st.title("Client Background Information")
 
-resp = requests.get("http://localhost:4000/health_analyst/client_info")
+resp = requests.get("http://web-api:4000/health_analyst/client_info")
 
 if resp.status_code == 200:
     st.dataframe(resp.json())

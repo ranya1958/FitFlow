@@ -12,7 +12,7 @@ SideBarLinks()
 if 'client_id' not in st.session_state:
     st.session_state.client_id = 1
 
-BASE_URL = "http://localhost:4000"
+BASE_URL = "http://web-api:4000"
 
 st.title("📝 Log a New Workout")
 st.markdown("### Record your training session")

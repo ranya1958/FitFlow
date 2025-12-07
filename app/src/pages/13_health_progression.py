@@ -15,7 +15,7 @@ if st.button("Submit"):
     if not client_id:
         st.warning("Please enter a Client ID.")
     else:
-        url = f"http://localhost:4000/health_analyst/health_progression/{client_id}"
+        url = f"http://web-api:4000/health_analyst/health_progression/{client_id}"
         resp = requests.get(url)
 
         if resp.status_code == 200:

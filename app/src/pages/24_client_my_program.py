@@ -13,7 +13,7 @@ if 'client_id' not in st.session_state:
 if 'client_name' not in st.session_state:
     st.session_state.client_name = "Chester Stone"
 
-BASE_URL = "http://localhost:4000"
+BASE_URL = "http://web-api:4000"
 
 st.title("🎯 My Training Program")
 st.markdown(f"### {st.session_state.client_name}'s Coach-Assigned Workout Plan")
