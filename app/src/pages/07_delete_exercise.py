@@ -1,5 +1,7 @@
 import streamlit as st
 import requests
+import logging
+logger = logging.getLogger(__name__)
 
 API_BASE = "http://localhost:4000/system_admin"
 
@@ -13,3 +15,6 @@ if st.button("Delete Exercise"):
         st.success("Exercise deleted.")
     else:
         st.error(resp.json())
+
+if st.button("⬅ Back to Admin Home"):
+    st.switch_page("pages/00_Sys_Admin_Home.py")

@@ -1,5 +1,7 @@
 import streamlit as st
 import requests
+import logging
+logger = logging.getLogger(__name__)
 
 API_BASE = "http://localhost:4000/system_admin"
 
