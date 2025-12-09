@@ -162,7 +162,7 @@ CREATE TABLE Workout_Session_Template(
   name              VARCHAR(100) NOT NULL,
   description       TEXT,
   duration_minutes  INT,
-  difficulty        ENUM('easy','moderate','hard') NOT NULL,
+  difficulty        ENUM('Easy','Medium','Hard') NOT NULL,
   date_created      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_wst_trainer
      FOREIGN KEY (trainer_id) REFERENCES Trainer(trainer_id)
@@ -251,7 +251,6 @@ CREATE TABLE Trainer_Feedback(
 
 -- =========================================================
 -- MOCK DATA FOR FITFLOW
--- Run this AFTER creating the schema and USE fitflow;
 -- =========================================================
 
 -- System_Admin
@@ -323,14 +322,14 @@ INSERT INTO Client (client_id, user_id, first_name, last_name, date_of_birth, ag
 INSERT INTO System_Log (log_id, user_id, action_type, description, timestamp) VALUES
   (1, 13, 'DELETE_LOG', 'DELETE_LOG action by user 13', '2025-10-01 09:00:00'),
   (2, 24, 'LOGOUT', 'LOGOUT action by user 24', '2025-10-01 09:15:00'),
-  (3, 8, 'DELETE_LOG', 'DELETE_LOG action by user 8', '2025-10-01 09:30:00'),
+  (3, 8, 'EXERCISE_FLAGGED', 'Exercise #12 flagged for unsafe form by user 8', '2025-10-01 09:30:00'),
   (4, 9, 'LOGIN', 'LOGIN action by user 9', '2025-10-01 09:45:00'),
   (5, 22, 'DELETE_LOG', 'DELETE_LOG action by user 22', '2025-10-01 10:00:00'),
   (6, 16, 'CREATE_WORKOUT', 'CREATE_WORKOUT action by user 16', '2025-10-01 10:15:00'),
   (7, 24, 'CREATE_WORKOUT', 'CREATE_WORKOUT action by user 24', '2025-10-01 10:30:00'),
   (8, 4, 'LOGOUT', 'LOGOUT action by user 4', '2025-10-01 10:45:00'),
   (9, 5, 'UPDATE_PROFILE', 'UPDATE_PROFILE action by user 5', '2025-10-01 11:00:00'),
-  (10, 14, 'CREATE_WORKOUT', 'CREATE_WORKOUT action by user 14', '2025-10-01 11:15:00'),
+  (10, 14, 'EXERCISE_FLAGGED', 'Exercise #7 flagged due to incorrect rep count', '2025-10-01 11:15:00'),
   (11, 12, 'UPDATE_PROFILE', 'UPDATE_PROFILE action by user 12', '2025-10-01 11:30:00'),
   (12, 16, 'LOGIN', 'LOGIN action by user 16', '2025-10-01 11:45:00'),
   (13, 9, 'VIEW_DASHBOARD', 'VIEW_DASHBOARD action by user 9', '2025-10-01 12:00:00'),
@@ -341,7 +340,7 @@ INSERT INTO System_Log (log_id, user_id, action_type, description, timestamp) VA
   (18, 18, 'VIEW_DASHBOARD', 'VIEW_DASHBOARD action by user 18', '2025-10-01 13:15:00'),
   (19, 3, 'LOGIN', 'LOGIN action by user 3', '2025-10-01 13:30:00'),
   (20, 1, 'VIEW_DASHBOARD', 'VIEW_DASHBOARD action by user 1', '2025-10-01 13:45:00'),
-  (21, 13, 'UPDATE_PROFILE', 'UPDATE_PROFILE action by user 13', '2025-10-01 14:00:00'),
+  (21, 13, 'EXERCISE_FLAGGED', 'Exercise #19 flagged for suspicious activity', '2025-10-01 14:00:00'),
   (22, 1, 'CREATE_WORKOUT', 'CREATE_WORKOUT action by user 1', '2025-10-01 14:15:00'),
   (23, 7, 'LOGOUT', 'LOGOUT action by user 7', '2025-10-01 14:30:00'),
   (24, 14, 'CREATE_WORKOUT', 'CREATE_WORKOUT action by user 14', '2025-10-01 14:45:00'),
@@ -350,17 +349,18 @@ INSERT INTO System_Log (log_id, user_id, action_type, description, timestamp) VA
   (27, 14, 'UPDATE_PROFILE', 'UPDATE_PROFILE action by user 14', '2025-10-01 15:30:00'),
   (28, 4, 'LOGIN', 'LOGIN action by user 4', '2025-10-01 15:45:00'),
   (29, 10, 'VIEW_DASHBOARD', 'VIEW_DASHBOARD action by user 10', '2025-10-01 16:00:00'),
-  (30, 13, 'DELETE_LOG', 'DELETE_LOG action by user 13', '2025-10-01 16:15:00'),
+  (30, 13, 'EXERCISE_FLAGGED', 'Exercise #5 marked as needing trainer review', '2025-10-01 16:15:00'),
   (31, 3, 'VIEW_DASHBOARD', 'VIEW_DASHBOARD action by user 3', '2025-10-01 16:30:00'),
-  (32, 18, 'DELETE_LOG', 'DELETE_LOG action by user 18', '2025-10-01 16:45:00'),
+  (32, 18, 'EXERCISE_FLAGGED', 'Flagged abnormal metrics for Exercise #3', '2025-10-01 16:45:00'),
   (33, 21, 'VIEW_DASHBOARD', 'VIEW_DASHBOARD action by user 21', '2025-10-01 17:00:00'),
   (34, 8, 'VIEW_DASHBOARD', 'VIEW_DASHBOARD action by user 8', '2025-10-01 17:15:00'),
   (35, 23, 'VIEW_DASHBOARD', 'VIEW_DASHBOARD action by user 23', '2025-10-01 17:30:00'),
-  (36, 20, 'DELETE_LOG', 'DELETE_LOG action by user 20', '2025-10-01 17:45:00'),
+  (36, 20, 'EXERCISE_FLAGGED', 'Exercise #14 flagged due to inconsistent weight entries', '2025-10-01 17:45:00'),
   (37, 20, 'LOGOUT', 'LOGOUT action by user 20', '2025-10-01 18:00:00'),
   (38, 10, 'LOGIN', 'LOGIN action by user 10', '2025-10-01 18:15:00'),
   (39, 1, 'LOGOUT', 'LOGOUT action by user 1', '2025-10-01 18:30:00'),
   (40, 5, 'DELETE_LOG', 'DELETE_LOG action by user 5', '2025-10-01 18:45:00');
+
 
 -- Backup_Log
 INSERT INTO Backup_Log (backup_id, performed_by, backup_start, backup_end, backup_time_mins, status) VALUES
@@ -400,16 +400,16 @@ INSERT INTO Exercise (exercise_id, name, description, category) VALUES
 
 -- Workout_Session_Template
 INSERT INTO Workout_Session_Template (workout_id, trainer_id, analyst_id, name, description, duration_minutes, difficulty, date_created) VALUES
-  (1, 1, 1, 'Full Body Strength A', 'Full Body Strength A template designed for general clients.', 40, 'moderate', '2025-09-01 08:00:00'),
-  (2, 2, NULL, 'Full Body Strength B', 'Full Body Strength B template designed for general clients.', 30, 'hard', '2025-09-02 08:00:00'),
-  (3, 3, NULL, 'Hypertrophy Upper', 'Hypertrophy Upper template designed for general clients.', 60, 'hard', '2025-09-03 08:00:00'),
-  (4, 4, 1, 'Hypertrophy Lower', 'Hypertrophy Lower template designed for general clients.', 45, 'easy', '2025-09-04 08:00:00'),
-  (5, 5, NULL, 'Cardio Endurance', 'Cardio Endurance template designed for general clients.', 50, 'moderate', '2025-09-05 08:00:00'),
-  (6, 6, NULL, 'HIIT Conditioning', 'HIIT Conditioning template designed for general clients.', 30, 'hard', '2025-09-06 08:00:00'),
-  (7, 7, 1, 'Core & Stability', 'Core & Stability template designed for general clients.', 45, 'moderate', '2025-09-07 08:00:00'),
-  (8, 8, NULL, 'Mobility Flow', 'Mobility Flow template designed for general clients.', 40, 'easy', '2025-09-08 08:00:00'),
-  (9, 1, NULL, 'Glute Focus', 'Glute Focus template designed for general clients.', 60, 'hard', '2025-09-09 08:00:00'),
-  (10, 2, 1, 'Athletic Power', 'Athletic Power template designed for general clients.', 50, 'moderate', '2025-09-10 08:00:00');
+  (1, 1, 1, 'Full Body Strength A', 'Full Body Strength A template designed for general clients.', 40, 'Medium', '2025-09-01 08:00:00'),
+  (2, 2, NULL, 'Full Body Strength B', 'Full Body Strength B template designed for general clients.', 30, 'Hard', '2025-09-02 08:00:00'),
+  (3, 3, NULL, 'Hypertrophy Upper', 'Hypertrophy Upper template designed for general clients.', 60, 'Hard', '2025-09-03 08:00:00'),
+  (4, 4, 1, 'Hypertrophy Lower', 'Hypertrophy Lower template designed for general clients.', 45, 'Easy', '2025-09-04 08:00:00'),
+  (5, 5, NULL, 'Cardio Endurance', 'Cardio Endurance template designed for general clients.', 50, 'Medium', '2025-09-05 08:00:00'),
+  (6, 6, NULL, 'HIIT Conditioning', 'HIIT Conditioning template designed for general clients.', 30, 'Hard', '2025-09-06 08:00:00'),
+  (7, 7, 1, 'Core & Stability', 'Core & Stability template designed for general clients.', 45, 'Medium', '2025-09-07 08:00:00'),
+  (8, 8, NULL, 'Mobility Flow', 'Mobility Flow template designed for general clients.', 40, 'Easy', '2025-09-08 08:00:00'),
+  (9, 1, NULL, 'Glute Focus', 'Glute Focus template designed for general clients.', 60, 'Hard', '2025-09-09 08:00:00'),
+  (10, 2, 1, 'Athletic Power', 'Athletic Power template designed for general clients.', 50, 'Medium', '2025-09-10 08:00:00');
 
 -- Workout_Specific_Exercise
 INSERT INTO Workout_Specific_Exercise (workout_exercise_id, workout_id, exercise_id, sets, reps, rest_period) VALUES
@@ -684,8 +684,6 @@ INSERT INTO Client_Specific_Workout_Program (program_id, workout_id, created_by,
   (19, 9, 1, 4, 'Program 19 for Client 4', 'Custom program based on Glute Focus', '2025-10-03 09:00:00'),
   (20, 10, 2, 5, 'Program 20 for Client 5', 'Custom program based on Athletic Power', '2025-10-04 09:00:00');
 
-DELETE FROM Client_Workout_Log;
-
 INSERT INTO Client_Workout_Log
 (log_id, client_id, workout_id, analyst_id, workout_date, completion_status, duration_minutes, notes, PR) VALUES
   (1, 1, 1, 1, '2025-10-01', 'completed', 60, 'Workout 1 for client 1, session 1', 'New PR on exercise 10'),
@@ -720,8 +718,6 @@ INSERT INTO Client_Workout_Log
   (30, 15, 10, NULL, '2025-10-30', 'completed', 30, 'Workout 10 for client 15, session 30', 'New PR on exercise 1'),
 
   (31, 1, 1, NULL, '2025-10-01', 'partial', 40, 'Workout 1 for client 1, session 31', NULL),
-
-  -- FIXED ROW (no "pending")
   (32, 2, 2, NULL, '2025-10-02', 'not_started', 35, 'Workout 2 for client 2, session 32', NULL),
 
   (33, 3, 3, 1, '2025-10-03', 'completed', 45, 'Workout 3 for client 3, session 33', 'New PR on exercise 19'),
@@ -774,11 +770,9 @@ INSERT INTO Client_Workout_Log
   (79, 4, 9, NULL, '2025-10-19', 'partial', 30, 'Workout 9 for client 4, session 79', NULL),
   (80, 5, 10, 1, '2025-10-20', 'completed', 60, 'Workout 10 for client 5, session 80', NULL);
 
-DELETE FROM Trainer_Feedback;
-
 INSERT INTO Trainer_Feedback (feedback_id, trainer_id, log_id, comment, created_at) VALUES
   (1, 1, 1, 'Great work today — maintain form on squats.', '2025-10-05 18:00:00'),
-  (2, 2, 2, 'Push a little harder next time.', '2025-10-05 18:30:00'),
+  (2, 2, 2, 'Push a little Harder next time.', '2025-10-05 18:30:00'),
   (3, 3, 3, 'Good effort — try to hit full depth.', '2025-10-05 19:00:00'),
   (4, 4, 4, 'Nice session! Keep core tight.', '2025-10-05 19:30:00'),
   (5, 5, 5, 'Form is improving — stay consistent.', '2025-10-05 20:00:00'),
@@ -818,7 +812,7 @@ INSERT INTO Trainer_Feedback (feedback_id, trainer_id, log_id, comment, created_
   (36, 4, 36, 'Try breathing rhythmically.', '2025-10-07 11:30:00'),
   (37, 5, 37, 'Good conditioning today.', '2025-10-07 12:00:00'),
   (38, 6, 38, 'Stay tight during core work.', '2025-10-07 12:30:00'),
-  (39, 7, 39, 'Push a bit harder on the last set.', '2025-10-07 13:00:00'),
+  (39, 7, 39, 'Push a bit Harder on the last set.', '2025-10-07 13:00:00'),
   (40, 8, 40, 'Your tempo is improving.', '2025-10-07 13:30:00'),
 
   (41, 1, 41, 'Very strong session today.', '2025-10-07 14:00:00'),
@@ -831,3 +825,14 @@ INSERT INTO Trainer_Feedback (feedback_id, trainer_id, log_id, comment, created_
   (48, 8, 48, 'Great job keeping pace steady.', '2025-10-07 17:30:00'),
   (49, 1, 49, 'Big improvement in technique.', '2025-10-07 18:00:00'),
   (50, 2, 50, 'Nice balance and control today.', '2025-10-07 18:30:00');
+
+-- SYSTEM ADMIN
+SELECT * FROM User;
+SELECT * FROM Exercise;
+
+-- Trainer
+SELECT * FROM Workout_Session_Template;
+SELECT * FROM Trainer_Feedback;
+
+-- Client
+SELECT * FROM Client_Workout_Log;

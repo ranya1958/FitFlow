@@ -1,66 +1,93 @@
-import logging
-logger = logging.getLogger(__name__)
-
 import streamlit as st
 import requests
 from modules.nav import SideBarLinks
 
 SideBarLinks()
-st.title("Create Workout Template")
 
-API_BASE = "http://web-api:4000"
+API = "http://web-api:4000/trainer"
+TRAINER_ID = 1   # mock persona
 
-# basic template info 
-name = st.text_input("Template Name")
-description = st.text_area("Description")
-duration = st.number_input("Duration (minutes)", min_value=1, step=5)
-difficulty = st.selectbox("Difficulty", ["easy", "moderate", "hard"])
+st.title("Workout Templates")
 
-# get the Workout-Specific Exercises 
-try:
-    response = requests.get(f"{API_BASE}/trainer/workout-exercises")
-    specific_exercises = response.json()
-except:
-    specific_exercises = []
-    st.error("Could not connect to API.")
+# ---------------------------------------
+# CREATE TEMPLATE
+# ---------------------------------------
+st.subheader("➕ Create Template")
 
-#  nice labels
-formatted_options = {
-    f"{ex['exercise_name']} • {ex['sets']}×{ex['reps']} • {ex['rest_period']}s rest (ID {ex['workout_exercise_id']})":
-    ex['workout_exercise_id']
-    for ex in specific_exercises
-}
+with st.form("create_template"):
+    name = st.text_input("Name")
+    description = st.text_area("Description")
+    duration = st.number_input("Duration (minutes)", min_value=1)
+    difficulty = st.selectbox("Difficulty", ["Easy", "Medium", "Hard"])
 
-selected_exercises = st.multiselect(
-    "Select Exercises for This Template",
-    list(formatted_options.keys())
-)
+    submitted = st.form_submit_button("Create Template")
 
-# create template 
-if st.button("Create Template", type='primary', use_container_width=True):
-
-    # 1. create the template row
-    template_payload = {
+if submitted:
+    data = {
         "name": name,
         "description": description,
         "duration_minutes": duration,
-        "difficulty": difficulty,
-        "trainer_id": st.session_state["user_id"]
+        "difficulty": difficulty
     }
+    resp = requests.post(f"{API}/create-templates/{TRAINER_ID}", json=data)
+    if resp.status_code == 201:
+        st.success("Template Created!")
+    else:
+        st.error(resp.text)
 
-    result = requests.post(f"{API_BASE}/trainer/workout_session_template", json=template_payload)
 
-    if result.status_code != 201:
-        st.error("Failed to create template.")
-        st.stop()
+# ---------------------------------------
+# VIEW ALL TEMPLATES
+# ---------------------------------------
+st.subheader("📋 Your Templates")
 
-    workout_id = result.json().get("workout_id")
+resp = requests.get(f"{API}/view-all-templates/{TRAINER_ID}")
+if resp.status_code == 200:
+    templates = resp.json()
+    for t in templates:
+        with st.expander(f"{t['name']} (ID: {t['workout_id']})"):
 
-    # assign each selected exercise to that template
-    for key in selected_exercises:
-        wse_id = formatted_options[key]
-        update_payload = {"workout_id": workout_id}
+            st.write(f"**Difficulty:** {t['difficulty']}")
+            st.write(f"**Duration:** {t['duration_minutes']} minutes")
+            st.write(f"**Description:** {t['description']}")
 
-        requests.put(f"{API_BASE}/trainer/workout-exercises/{wse_id}", json=update_payload)
+            col1, col2 = st.columns(2)
 
-    st.success("Workout Template Created Successfully!")
+            # UPDATE FORM
+            with col1:
+                with st.form(f"update_{t['workout_id']}"):
+                    new_name = st.text_input("Name", t["name"])
+                    new_desc = st.text_area("Description", t["description"])
+                    new_diff = st.selectbox("Difficulty",
+                                            ["Easy", "Medium", "Hard"],
+                                            index=["Easy","Medium","Hard"].index(t["difficulty"]))
+
+                    new_dur = st.number_input("Duration", min_value=1, value=t["duration_minutes"])
+                    upd = st.form_submit_button("Update")
+
+                if upd:
+                    update_data = {
+                        "name": new_name,
+                        "description": new_desc,
+                        "difficulty": new_diff,
+                        "duration_minutes": new_dur
+                    }
+                    r = requests.put(f"{API}/update-template/{t['template_id']}",
+                                     json=update_data)
+                    if r.status_code == 200:
+                        st.success("Updated!")
+                        st.rerun()
+                    else:
+                        st.error(r.text)
+
+            # DELETE BUTTON
+            with col2:
+                if st.button("❌ Delete", key=f"del_{t['workout_id']}"):
+                    r = requests.delete(f"{API}/delete-template/{t['template_id']}")
+                    if r.status_code == 200:
+                        st.success("Template Deleted!")
+                        st.rerun()
+                    else:
+                        st.error(r.text)
+else:
+    st.error("Could not load templates.")

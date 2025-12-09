@@ -10,8 +10,6 @@ exercise_id = st.number_input("Exercise ID", min_value=1)
 if st.button("Delete Exercise"):
     resp = requests.delete(f"{API_BASE}/exercise/{exercise_id}")
 
-    st.write("RAW RESPONSE:", resp.text)  # <--- debugging
-
     try:
         data = resp.json()
     except:

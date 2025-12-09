@@ -14,6 +14,63 @@ if 'client_id' not in st.session_state:
 
 BASE_URL = "http://web-api:4000"
 
+st.markdown(
+    """
+    <style>
+        :root {
+            --fit-primary: #ff4d4f;
+            --fit-secondary: #05d5ff;
+            --fit-bg: #ffffff;
+            --fit-card: rgba(0,0,0,0.02);
+            --fit-stroke: rgba(0,0,0,0.08);
+        }
+        [data-testid="stAppViewContainer"] {
+            background: var(--fit-bg);
+            color: #0f172a;
+        }
+        .fit-card {
+            border-radius: 14px;
+            padding: 14px 16px;
+            background: linear-gradient(160deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));
+            border: 1px solid var(--fit-stroke);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+        }
+        .fit-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 30px;
+            border: 1px solid var(--fit-stroke);
+            background: rgba(255,77,79,0.08);
+            font-size: 0.9rem;
+            color: #0f172a;
+        }
+        .fit-section {
+            border-radius: 14px;
+            border: 1px solid var(--fit-stroke);
+            padding: 16px;
+            background: #fff;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+        }
+        .stButton button, .stDownloadButton button {
+            background: linear-gradient(135deg, var(--fit-primary), #ff6b6d);
+            color: #fff;
+            border: none;
+            box-shadow: 0 10px 25px rgba(255,77,79,0.35);
+        }
+        .stButton button:hover, .stDownloadButton button:hover { transform: translateY(-1px); }
+        .stSelectbox div[data-baseweb="select"]>div, .stTextArea textarea, .stNumberInput input, .stDateInput input {
+            border-radius: 12px;
+            border: 1px solid var(--fit-stroke);
+            background: rgba(0,0,0,0.02);
+        }
+        .stSubheader, h1, h2, h3 { color: #0f172a; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 st.title("📝 Log a New Workout")
 st.markdown("### Record your training session")
 
@@ -113,7 +170,10 @@ try:
         
         if logs:
             df = pd.DataFrame(logs)
-            df['workout_date'] = pd.to_datetime(df['workout_date']).dt.strftime('%Y-%m-%d')
+            if 'workout_date' in df.columns:
+                df['workout_date'] = pd.to_datetime(df['workout_date']).dt.strftime('%Y-%m-%d')
+            if 'notes' not in df.columns:
+                df['notes'] = ""
             
             st.dataframe(
                 df.head(5)[['workout_date', 'workout_name', 'duration_minutes', 'completion_status', 'notes']],

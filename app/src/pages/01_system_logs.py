@@ -7,7 +7,7 @@ API_BASE = "http://web-api:4000/system_admin"
 
 st.title("System Logs")
 
-action_filter = st.text_input("Filter by action_type (optional): e.g., FLAG_EXERCISE")
+action_filter = st.text_input("Filter by action_type (optional): e.g., EXERCISE_FLAGGED")
 
 if st.button("Load Logs"):
     if action_filter:
