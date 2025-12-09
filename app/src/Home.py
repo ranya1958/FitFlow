@@ -56,7 +56,7 @@ st.markdown(
         <h1 style="color: #FF1A1A; font-size: 3rem; margin-bottom: 10px;">
             FitFlow
         </h1>
-        <p style="color: white; font-size: 1.2rem;">
+        <p style="color:white" font-size: 1.2rem;">
             Choose a persona to experience the platform.
         </p>
     </div>
@@ -68,7 +68,7 @@ st.markdown(
 # Persona Prompt
 # ---------------------------------------------
 st.markdown(
-    "<h3 style='text-align:center; color:white;'>Select a user role to continue</h3>",
+    "<h3 style='text-align:center;'>Select a user role to continue</h3>",
     unsafe_allow_html=True,
 )
 st.write("")

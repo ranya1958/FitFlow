@@ -22,7 +22,7 @@ def get_average_workout_duration():
             ORDER BY c.client_id, year, week;
         """
 
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
         cursor.execute(query)
         data = cursor.fetchall()
         cursor.close()
@@ -53,7 +53,7 @@ def get_client_info():
             FROM Client c;
         """
 
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
         cursor.execute(query)
         data = cursor.fetchall()
         cursor.close()
@@ -86,7 +86,7 @@ def get_recent_health_metrics():
             );
         """
 
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
         cursor.execute(query)
         data = cursor.fetchall()
         cursor.close()
@@ -115,7 +115,7 @@ def get_health_progression():
             ORDER BY client_id, month;
         """
 
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
         cursor.execute(query)
         data = cursor.fetchall()
         cursor.close()
@@ -150,7 +150,7 @@ def get_program_completion_rates():
             ORDER BY completion_rate DESC;
         """
 
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
         cursor.execute(query)
         data = cursor.fetchall()
         cursor.close()
@@ -179,7 +179,7 @@ def get_workout_template_usage():
             ORDER BY used DESC;
         """
 
-        cursor = db.get_db().cursor(dictionary=True)
+        cursor = db.get_db().cursor()
         cursor.execute(query)
         data = cursor.fetchall()
         cursor.close()

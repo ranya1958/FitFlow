@@ -3,11 +3,7 @@ from backend.db_connection import db
 
 from .system_admin.admin_routes import system_admin
 from .health_analyst.health_analyst_routes import health_analyst
-from .trainer.trainer_routes_client_logs import trainer_logs
-from .trainer.trainer_routes_client_program import trainer_programs
-from .trainer.trainer_routes_feedback import trainer_feedback
-from .trainer.trainer_routes_workout_specific_exercise import trainer_workout_exercises
-from .trainer.trainer_routes_workout_template import trainer_templates
+from .trainer.trainer_routes import trainer
 from .client.client_routes import client
 
 import os
@@ -46,11 +42,7 @@ def create_app():
     app.logger.info('create_app(): registering blueprints with Flask app object.')
     app.register_blueprint(system_admin, url_prefix="/system_admin")
     app.register_blueprint(health_analyst, url_prefix="/health_analyst")
-    app.register_blueprint(trainer_logs, url_prefix="/trainer_logs")
-    app.register_blueprint(trainer_programs, url_prefix="/trainer_programs")
-    app.register_blueprint(trainer_feedback, url_prefix="/trainer_feedback")
-    app.register_blueprint(trainer_templates, url_prefix="/trainer_templates")
-    app.register_blueprint(trainer_workout_exercises, url_prefix="/trainer_workout_excs")
+    app.register_blueprint(trainer, url_prefix="/trainer")
     app.register_blueprint(client, url_prefix="/client")
 
     # Don't forget to return the app object

@@ -78,23 +78,15 @@ def HealthWorkoutFrequencyNav():
 #        TRAINER NAV
 ############################
 def TrainerHomeNav():
-    st.sidebar.page_link("pages/16_Trainer_home.py", label="Trainer Home", icon="🏋️")
-
-def TrainerWorkoutSpecificExerciseNav():
-    st.sidebar.page_link("pages/17_trainer_workout_specific_exercise.py",
-                         label="Workout-Specific Exercises", icon="📘")
-
-def TrainerWorkoutTemplatesNav():
-    st.sidebar.page_link("pages/18_trainer_workout_templates.py",
-                         label="Workout Templates", icon="📄")
-
-def TrainerClientProgramsNav():
-    st.sidebar.page_link("pages/19_trainer_client_programs.py",
-                         label="Client Programs", icon="📚")
-
-def TrainerClientLogsNav():
-    st.sidebar.page_link("pages/20_trainer_client_logs.py",
-                         label="Client Workout Logs", icon="📝")
+    st.sidebar.page_link("pages/16_Trainer_home.py", label="Trainer Home")
+def TrainerExc():
+    st.sidebar.page_link("pages/17_trainer_workout_specific_exercise.py", label="Create Exercises")
+def TrainerWktTemp():
+    st.sidebar.page_link("pages/18_trainer_workout_templates.py", label="Workout Templates")
+def TrainerClientProg():
+    st.sidebar.page_link("pages/19_trainer_client_programs.py", label="Client Programs")
+def TrainerClientLog():
+    st.sidebar.page_link("pages/20_trainer_client_logs.py", label="Client Logs & Feedback")
 
 
 ############################
@@ -159,10 +151,10 @@ def SideBarLinks(show_home=False):
         # ---------------- TRAINER ----------------
         elif role == "trainer":
             TrainerHomeNav()
-            TrainerWorkoutSpecificExerciseNav()
-            TrainerWorkoutTemplatesNav()
-            TrainerClientProgramsNav()
-            TrainerClientLogsNav()
+            TrainerExc()
+            TrainerWktTemp()
+            TrainerClientProg()
+            TrainerClientLog()
 
         # ---------------- CLIENT ----------------
         elif role == "client":

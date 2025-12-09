@@ -6,7 +6,6 @@ from flask import current_app
 # Create a Blueprint for Client routes
 client = Blueprint('client', __name__)
 
-
 # Route 1: GET all completed workout logs for client
 @client.route("/client_workout_log", methods=["GET"])
 def get_client_workout_logs():
@@ -209,4 +208,55 @@ def get_monthly_completion_rate():
         
     except Error as e:
         current_app.logger.error(f'Database error in get_monthly_completion_rate: {str(e)}')
+        return jsonify({"error": str(e)}), 500
+    
+# ROUTE 6 GET - Get client's current workout program with exercises
+@client.route("/client_specific_workout_program/exercises", methods=["GET"])
+def get_client_program_exercises():
+    try:
+        client_id = request.args.get("client_id", type=int)
+        if not client_id:
+            return jsonify({"error": "client_id is required"}), 400
+
+        conn = db.get_db()
+        cursor = conn.cursor()
+
+        # Get ONLY the most recent program for the client
+        query = """
+            SELECT
+                p.program_id,
+                p.name AS program_name,
+                w.workout_id,
+                w.name AS workout_name,
+                w.description AS workout_description,
+                w.duration_minutes,
+                w.difficulty,
+                e.name AS exercise_name,
+                wse.sets,
+                wse.reps,
+                wse.rest_period
+            FROM Client_Specific_Workout_Program p
+            JOIN Workout_Session_Template w
+                ON p.workout_id = w.workout_id
+            JOIN Workout_Specific_Exercise wse
+                ON w.workout_id = wse.workout_id
+            JOIN Exercise e
+                ON wse.exercise_id = e.exercise_id
+            WHERE p.client_id = %s
+              AND p.program_id = (
+                    SELECT MAX(program_id)
+                    FROM Client_Specific_Workout_Program
+                    WHERE client_id = %s
+              )
+            ORDER BY wse.workout_exercise_id;
+        """
+
+        cursor.execute(query, (client_id, client_id))
+        rows = cursor.fetchall()
+        cursor.close()
+
+        # Return empty list → Streamlit shows "no program yet"
+        return jsonify(rows), 200
+
+    except Exception as e:
         return jsonify({"error": str(e)}), 500
